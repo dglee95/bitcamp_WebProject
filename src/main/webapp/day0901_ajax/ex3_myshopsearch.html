@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Dongle&family=Gugi&family=Hahmlet&family=Jua&family=Lobster&family=Rubik+Beastly&family=Rubik+Burned&family=Rubik+Marker+Hatch&family=Single+Day&display=swap"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<style type="text/css">
+	body *{
+		font-family: 'Jua';
+	}
+		
+	div.scolor{
+		width:25px;
+		height:25px;
+		border:1px solid gray;
+		border-radius:100px;
+	}
+	td.td1{
+		background-color:#F6E5F7;
+	}
+	
+	table.tb1{
+		margin-left:50px;
+	}
+	
+	b.a{
+		text-decoration:underline;
+		font-weight:bold;
+		background-color:red;
+	}
+	
+	i.delete{
+		cursor:pointer;
+		float:right;
+	}
+	
+	i.addform{
+		
+	}
+	
+	div.inputform{
+		position:absolute;
+		left:500px;
+		top:100px;
+		width:400px;
+	}
+</style>
+<script type="text/javascript">
+	$(function(){
+		search("");
+		
+		//inputform 안보이게 처리
+		$("div.inputform").hide();
+		
+		//+클릭시 입력폼 나타낫다 사라졌다
+		$("i.addform").click(function(){
+			$("div.inputform").slideToggle("fast");
+		});
+		
+		var srcImg=$("#photo").val();
+		//작은 이미지의 src에 넣어준다
+		$("#myphoto").attr("src","../image2/"+srcImg+".jpg");
+		
+		$("#btnsave").click(function(){
+			var sangpum=$("#addsangpum").val();
+			var photo=$("#photo").val();
+			var color=$("#addcolor").val();
+			var price=$("#addprice").val();
+			var ipgoday=$("#addipgoday").val();
+			
+			$.ajax({
+		         type:"get",
+		         url:"ex3_addsangpum.jsp",
+		         dataType:"html",
+		         data:{"sangpum":sangpum,"photo":photo,"color":color,"price":price,"ipgoday":ipgoday},
+		         success:function(res){
+		        	 alert(sangpum+"상품이 추가되었습니다");
+		        	 //페이지 다시 로딩
+		        	 location.reload();
+		         },
+		         statusCode:{
+		            404:function(){
+		               alert("json 파일을 찾을 수 없어요!");
+		            },
+		            500:function(){
+		               alert("서버 오류..코드를 다시 한 번 보세요!");
+		            }
+		         
+		         }
+		         
+		      });
+			
+		});
+		
+		$("#sangpum").keyup(function(e){
+			if(e.keyCode==13){
+				search($(this).val().trim());//앞뒤공백 제거 후 보내기
+			}
+		});
+		
+		$("#btn1").click(function(){
+			search($("#sangpum").val().trim());
+		});
+		
+		//휴지통 모양 클릭시 num값 얻기
+		$(document).on("click","i.delete", function(e) {
+			var num=$(this).attr("num");
+			var a=confirm("삭제하려면 [확인]을 선택하세요");
+			if(!a)//취소 선택시 함수 종료
+				return;
+			
+			$.ajax({
+		         type:"get",
+		         url:"ex3_myshopdelete.jsp",
+		         dataType:"html",
+		         data:{"num":num},
+		         success:function(res){
+		            //전체 새로고침
+		            //location.reload();
+		            
+		            //검색버튼 호출
+		            $("#btn1").trigger("click");
+		         },
+		         statusCode:{
+		            404:function(){
+		               alert("json 파일을 찾을 수 없어요!");
+		            },
+		            500:function(){
+		               alert("서버 오류..코드를 다시 한 번 보세요!");
+		            }
+		         
+		         }
+		         
+		      });
+			
+		      
+		});
+
+	});
+	
+	
+	function search(sangpum){
+		var s="";
+		$.ajax({
+	         type:"get",
+	         url:"ex3_myshopjson.jsp",
+	         dataType:"json",/*백엔드(jsp)에서 front(html)로 보내는 데이터의 타입*/
+	         data:{"sangpum":sangpum},/*front에서 백엔드로 보내는 데이터 방식#1 (가장 많이 씀) name 형식으로 넘어감*/
+	         success:function(res){
+	        	 $.each(res,function(idx,ele){
+	        		s+="<table class='table table-bordered tb1' style='width:350px;'>"
+					s+="<tr  style='margin-top:5px;' align='center' valign='middle'>";
+					s+="<td rowspan='3' width='110' class='td1'>";
+					s+="<img class='img-thumbnail' src='"+ele.photo+"' style='width:100px;'>";
+					s+="</td>";
+					s+="<th width='80' class='table-info'>";
+					s+="상품명";
+					s+="</th>";
+					s+="<td align='left' class='table-warning'>";
+					
+					//검색한 단어에 css 주기
+					//예:ele.sangpum은 전체 상품명 레이스 조끼,
+					//입력 sangpum 이 조끼
+					//ss= 레이스 <b class='a'>조끼</b>
+					//style에서 b.a로 css 입힘
+					
+// 					var q=(ele.sangpum).toString().substr(0, (ele.sangpum).toString().indexOf("[")+1);
+// 					var w=(ele.sangpum).toString().substr((ele.sangpum).toString().indexOf("[")+1, (ele.sangpum).toString().indexOf("]")-1);
+// 					var e=(ele.sangpum).toString().substr((ele.sangpum).toString().indexOf("]"), (ele.sangpum).toString().length);
+					var ss=ele.sangpum.replace(sangpum,"<b class='a'>"+sangpum+"</b>");
+					s+=ss;
+					s+="<i class='fas fa-trash-alt delete' style='font-size:24px;' num="+ele.num+"></i>";
+					s+="</td>";
+					s+="</tr>";
+					s+="<tr align='center' valign='middle'>";
+					s+="<th class='table-info'>";
+					s+="색상";
+					s+="</th>";
+					s+="<td class='table-warning'>";
+					s+="<div class='scolor' style='background-color:"+ele.color+";'>";
+					s+="</td>";
+					s+="</tr>";
+					s+="<tr align='center' valign='middle'>";
+					s+="<th class='table-info'>";
+					s+="가격";
+					s+="</th>";
+					s+="<td align='right' class='table-warning'>";
+					s+=ele.price;
+					s+="</td>";
+					s+="</tr>";
+		        	s+="</table>";
+
+	        	 });
+	        	 $("#result").append(s);
+	            
+	         },
+	         statusCode:{
+	            404:function(){
+	               alert("json 파일을 찾을 수 없어요!");
+	            },
+	            500:function(){
+	               alert("서버 오류..코드를 다시 한 번 보세요!");
+	            }
+	         
+	         }
+	         
+	      });
+		
+	};
+</script>
+</head>
+<body>
+<div style="margin:20px 20px;width:500px;">
+	<div class="input-group">
+		<h3>상품명 검색 : </h3>&emsp;
+		<input type="text" class="form-control" id="sangpum" placeholder="조회할 상품명 입력" autofocus>&emsp;
+		<button type="button" class="btn btn-danger" id="btn1">조회</button>
+	
+		<i class='fas fa-plus addform' style='font-size:48px;color:red;margin-left:10px;cursor:pointer;'></i>
+	</div>
+	<div id="result" style="margin-top:20px;">
+	111
+	</div>
+</div>
+	
+<div class="inputform">
+<table class="table table-bordered" style="width:400px;">
+			<caption align="top"><h4><b>상품등록</b></h4></caption>
+			<tr>
+				<th width="100" style="background-color:#48d1cc;">상품명</th>
+				<td>
+					<input type="text" id="addsangpum" required="required"
+					class="form-control">
+				</td> 
+			</tr>
+			<tr>
+				<th width="100" style="background-color:#48d1cc;">상품사진</th>
+				<td>
+					<div class="input-group">
+					<select name="photo" id="photo" class="form-select" style="width:150px;">
+						<option value="11">단화</option>
+						<option value="10">스카프</option>
+						<option value="29">모자</option>
+						<option value="31">화이트자켓</option>
+						<option value="33">원피스</option>
+						<option value="26">머리끈</option>
+						<option value="30">머리띠</option>
+					</select>
+					<img src="" width="40" height="40" id="myphoto">
+					</div>
+					<script type="text/javascript">
+						//select 변경시 사진도 변경되도록 이벤트를 추가하세요
+						$("#photo").change(function(){
+							var src="../image2/"+$(this).val()+".jpg";
+							$("#myphoto").attr("src",src);	
+						});
+					</script>
+				</td> 
+			</tr>
+			<tr>
+				<th width="100" style="background-color:#48d1cc;">색 상</th>
+				<td>
+					<input type="color" id="addcolor" value="#ffc0cb"
+					class="form-control" style="width:100px;">
+				</td> 
+			</tr>
+			<tr>
+				<th width="100" style="background-color:#48d1cc;">가격</th>
+				<td>
+					<input type="text" id="addprice" required="required"
+					class="form-control" pattern="[0-9]{3,}"><!-- 0-9만 입력가능,3글자이상 -->
+				</td> 
+			</tr>
+			<tr>
+				<th width="100" style="background-color:#48d1cc;">입고일</th>
+				<td>
+					<input type="date" id="addipgoday" value="2022-08-22"
+					class="form-control">
+				</td> 
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<button type="button" id="btnsave" class="btn btn-success">상품저장</button>
+
+				</td>
+				
+			</tr>
+			
+		</table>
+</div>
+
+</body>
+</html>

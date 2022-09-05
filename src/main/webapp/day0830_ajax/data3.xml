@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bitcamp>
+	<stu name="lee">
+		<java>90</java>
+		<spring>100</spring>
+		<html>78</html>
+	</stu>
+	<stu name="kim">
+		<java>56</java>
+		<spring>89</spring>
+		<html>80</html>
+	</stu>
+	<stu name="son">
+		<java>78</java>
+		<spring>97</spring>
+		<html>66</html>
+	</stu>
+</bitcamp>

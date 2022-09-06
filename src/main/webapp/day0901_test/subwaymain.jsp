@@ -545,7 +545,7 @@
 			sch=$(this).attr("sch");
 			pn=$(this).attr("pn");
 			$("#map").css({
-				right:(window.pageXOffset+1)*10+"%",
+				right:(window.pageXOffset+1)*13+"%",
 				top:window.pageYOffset+180+"px",
 			});		
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

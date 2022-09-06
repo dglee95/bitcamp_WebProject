@@ -1,3 +1,4 @@
+<%@page import="data.dao.SmartAnswerDao"%>
 <%@page import="data.dto.SmartDto"%>
 <%@page import="data.dao.SmartDao"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -33,6 +34,7 @@
 		color:#0a58ca;
 		font-weight:bold;
 	}
+
 </style>
 
 </head>
@@ -41,10 +43,11 @@
 	//dao 선언
 	SmartDao dao = new SmartDao();
 	
+	
 	//페이징 처리에 필요한 변수들	
 	//전체 갯수
 	int totalCount = dao.getTotalCount();
-	int perPage=2;//한 페이지당 보여질 글의 갯수(일반적으론 10개)
+	int perPage=4;//한 페이지당 보여질 글의 갯수(일반적으론 10개)
 	int perBlock=3;//한 페이지당 보여질 블럭의 갯수(일반적으론 10개)
 	int startNum;//db에서 가져올 글의 시작번호(mysql은 첫글이 0번,오라클은 1번)
 	//endNum은 오라클만 필요
@@ -116,15 +119,20 @@
 			<%}else{
 				SimpleDateFormat sdf=new SimpleDateFormat("yyyy.MM.dd.");
 				for(SmartDto dto:list){%>
-					<tr height="40">
+					<tr height="40" valign="middle">
 						<td align="center"><input type="checkbox" class="alldel" value="<%=dto.getNum()%>">&nbsp;&nbsp;<%=no--%></td>
-							<td align="left"><a href="contentview.jsp?num=<%=dto.getNum()%>&currentPage=<%=currentPage%>">
+							<td align="left">
+							
 							<!-- 제목이 너무 길 경우 잘라내요 ...으로 출력하기 -->
-							<span style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap;display: block;max-width: 380px;">
-							<img src="../save/<%=dto.getMainphoto()%>" width="40" height="40"
-							border="1">&nbsp;
-							<%=dto.getSubject() %></span>
-							</a></td>
+							<a href="contentview.jsp?num=<%=dto.getNum()%>&currentPage=<%=currentPage%>">
+							<img src="../save/<%=dto.getMainphoto()%>" width="40" height="40" border="1">&nbsp;
+							<span style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;max-width: 300px;">
+							<%=dto.getSubject()%>&nbsp;
+							</span>
+							<%SmartAnswerDao dar=new SmartAnswerDao();%>
+							<em style="color:red;"><%=dar.getReviewCount(dto.getNum())==0?"":"("+dar.getReviewCount(dto.getNum())+")"%></em>
+							</a>
+							</td>
 						<td align="center"><%=dto.getWriter()%></td>
 						<td align="center"><%=sdf.format(dto.getWriteday())%></td>
 						<td align="center"><%=dto.getReadcount()%></td>

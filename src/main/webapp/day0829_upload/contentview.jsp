@@ -33,11 +33,84 @@
 		color:#979797;
 		font-size:0.9em;
 	}
+	
 	img{
 		max-width:490px;
 	}
+	
+	div.alist{
+		margin-left:20px;
+	}
+	
+	div.alist span.aday{
+		float:right;
+		font-size: 0.8em;
+		color: #bbb;
+	
+	}
 
 </style>
+<script>
+	$(function(){
+		//처음 시작 시 호출
+		list();
+		
+		$(document).on("click",".adel",function(){
+			var a=confirm("선택한 댓글을 삭제하시겠습니까?");
+			var idx=$(this).attr("idx");
+			if(a){
+				$.ajax({
+					type:"get",
+					url:"deleteanswer.jsp",
+					dataType:"html",
+					data:{"idx":idx},
+					success:function(res){
+						list();
+					},
+					statusCode: {
+						404:function(){
+							alert("json 파일을 찾을수 없어요!");
+						},
+						500:function(){
+							alert("서버 오류..코드를 다시 한번 보세요!");
+						}
+					}
+				});
+			}
+		});
+	});
+	
+	function list(){
+		//댓글 출력
+		console.log("list num="+$("#num").val());
+		var s="";
+		$.ajax({
+			type:"get",
+			url:"listanswer.jsp",
+			dataType:"json",
+			data:{"num":$("#num").val()},
+			success:function(res){
+				$("b.acount>span").text(res.length);
+				$.each(res,function(idx,item){
+					s+="<div>"+item.nickname+"&nbsp;:&nbsp;"+item.content;
+					s+="<span class='aday'>"+item.writeday+"</span>";
+					s+="<button type='button' idx="+item.idx+" class='adel'>삭제</button>";
+					s+="</div>";
+				});
+				$("div.alist").html(s);
+			},
+			statusCode: {
+				404:function(){
+					alert("json 파일을 찾을수 없어요!");
+				},
+				500:function(){
+					alert("서버 오류..코드를 다시 한번 보세요!");
+				}
+			}
+		})
+		
+	}
+</script>
 
 
 </head>
@@ -52,12 +125,13 @@
 	dao.updateReadCount(num);
 	
 	SmartDto dto=dao.getData(num);
-
 	
 	//날짜 형식
 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy.MM.dd. a hh시' 'm분");
 
 %>
+<input type="hidden" id="num" value="<%=num%>">
+
 <div style="margin:30px 30px;width:500px;">
 	<table class="table table-bordered">
 		<caption align="top">
@@ -85,6 +159,66 @@
 					%>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<b class="acount">댓글 <span>0</span></b>
+					<div class="alist">
+						댓글목록
+					</div>
+					<div class="aform input-group">
+						<input type="text" id="nickname" class="form-control form-control-sm" 
+						style="width:100px;" placeholder="닉네임">
+					
+						<input type="text" id="content" class="form-control form-control-sm" 
+						style="width:300px;" placeholder="댓글 메세지">
+						
+						<button type="button" id="btnasend" class="btn btn-info btn-sm">저장</button>
+					</div>
+					<br>
+					
+				</td>
+			</tr>
+			<script>
+				//댓글부분 ajax insert code
+				var num=$("#num").val();
+				console.log(num);
+				
+				$("#btnasend").click(function(){
+					var nickname=$("#nickname").val().trim();
+					var content=$("#content").val().trim();
+					if(nickname==''){
+						alert("닉네임을 입력 후 저장해주세요");
+						return;
+					}
+					if(content==''){
+						alert("내용을 입력 후 저장해주세요");
+						return;							
+					}
+					
+					$.ajax({
+						type:"get",
+						url:"insertanswer.jsp",
+						dataType:"html",
+						data:{"num":num,"nickname":nickname,"content":content},
+						success:function(res){
+							//기존 입력값 지우기
+							$("#nickname").val('');
+							$("#content").val('');
+							//댓글 추가 후 댓글목록 다시 출력
+							list();
+						},
+						statusCode: {
+							404:function(){
+								alert("json 파일을 찾을수 없어요!");
+							},
+							500:function(){
+								alert("서버 오류..코드를 다시 한번 보세요!");
+							}
+						}
+					})
+				});
+			</script>
+			
 			<tr align="center">
 				<td colspan="4">
 				<button type="button" class="btn btn-outline-primary"

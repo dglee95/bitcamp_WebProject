@@ -35,6 +35,7 @@
 		font-weight:bold;
 	}
 
+
 </style>
 
 </head>
@@ -89,6 +90,13 @@
 	//페이지에서 보여질 글만 가져오기
 	//전체 데이터
 	List<SmartDto> list = dao.getPagingList(startNum, perPage);
+	
+	//list의 각 dto에 댓글 갯수 저장해두기
+	SmartAnswerDao adao=new SmartAnswerDao();
+	for(SmartDto dto:list)
+	{
+		dto.setAnswercount(adao.getAnswerList(dto.getNum()).size());
+	}
 %>
 <script type="text/javascript">
 	function post(){
@@ -122,16 +130,27 @@
 					<tr height="40" valign="middle">
 						<td align="center"><input type="checkbox" class="alldel" value="<%=dto.getNum()%>">&nbsp;&nbsp;<%=no--%></td>
 							<td align="left">
-							
 							<!-- 제목이 너무 길 경우 잘라내요 ...으로 출력하기 -->
+							<div class="input-group" style="display:flex;aglin-item:center;">
 							<a href="contentview.jsp?num=<%=dto.getNum()%>&currentPage=<%=currentPage%>">
-							<img src="../save/<%=dto.getMainphoto()%>" width="40" height="40" border="1">&nbsp;
-							<span style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap;display: inline-block;max-width: 300px;">
-							<%=dto.getSubject()%>&nbsp;
+							<img src="../save/<%=dto.getMainphoto()%>" width="40" height="40" border="1">
+							<span style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap;display: block;max-width: 360px;">
+							<%=dto.getSubject()%>
 							</span>
-							<%SmartAnswerDao dar=new SmartAnswerDao();%>
-							<em style="color:red;"><%=dar.getReviewCount(dto.getNum())==0?"":"("+dar.getReviewCount(dto.getNum())+")"%></em>
+<%-- 							<%SmartAnswerDao dar=new SmartAnswerDao();%> --%>
+<%-- 							<em style="color:red;position:relative;left:2px;"><%=dar.getReviewCount(dto.getNum())==0?"":"("+dar.getReviewCount(dto.getNum())+")"%></em> --%>
 							</a>
+							&nbsp;
+							<!-- 댓글 갯수 출력 -->
+							<%
+							if(dto.getAnswercount()>0)
+							{%>
+								<a href="contentview.jsp?num=<%=dto.getNum()%>&currentPage=<%=currentPage%>#alist" style="color:red">
+								[<%=dto.getAnswercount()%>]
+								</a>
+							<%}
+							%>
+							</div>
 							</td>
 						<td align="center"><%=dto.getWriter()%></td>
 						<td align="center"><%=sdf.format(dto.getWriteday())%></td>

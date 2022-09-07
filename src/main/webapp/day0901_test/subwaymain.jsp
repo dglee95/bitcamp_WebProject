@@ -256,7 +256,7 @@
 	
 	.table-purple{--bs-table-bg:#9560F7;--bs-table-striped-bg:#c5e8ef;--bs-table-striped-color:#000;--bs-table-active-bg:#badce3;--bs-table-active-color:#000;--bs-table-hover-bg:#bfe2e9;--bs-table-hover-color:#000;color:#000;border-color:#badce3}
 	.table{--bs-table-bg:transparent;--bs-table-accent-bg:transparent;--bs-table-striped-color:#212529;--bs-table-striped-bg:rgba(0, 0, 0, 0.05);--bs-table-active-color:#212529;--bs-table-active-bg:rgba(0, 0, 0, 0.1);--bs-table-hover-color:#212529;--bs-table-hover-bg:rgba(0, 0, 0, 0.075);width:100%;margin-bottom:1rem;color:#212529;vertical-align:top;
-	border-color:#7936f5;border-collapse: collapse;border-style: hidden;box-shadow: 0 0 0 1px #000;}
+	border-collapse: collapse;border-style: hidden;box-shadow: 0 0 0 1px #000;}
 	
 	ul{position:relative;left:1px;margin-top:0;margin-bottom:1rem;padding-left:2rem}
 	.pagination{display:flex;padding-left:0;list-style:none}

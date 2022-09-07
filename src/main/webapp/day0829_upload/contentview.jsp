@@ -9,10 +9,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Gugi&family=Hahmlet&family=Jua&family=Lobster&family=Rubik+Beastly&family=Rubik+Burned&family=Rubik+Marker+Hatch&family=Single+Day&display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
 <style type="text/css">
 	*{
 		font-family: 'Jua';
@@ -48,7 +53,25 @@
 		color: #bbb;
 	
 	}
-
+.btn-neon-blue{color:#387df2;outline:2px solid #387df2;font-weight:bold;margin:3px 3px 10px 3px;}
+	.btn-neon-blue:hover{background:#387df2;color:#fff;box-shadow: 0 0 5px #387df2, 0 0 25px #387df2, 0 0 50px #387df2, 0 0 100px #387df2;transform:scale(1.1);}
+	.btn-neon-blue.focus,.btn-neon-blue:focus{color:#387df2;background-color:#fff;border-color:#387df2;box-shadow:0 0 0 .2rem #387df2}
+	.btn-neon-blue.disabled,.btn-neon-blue:disabled{color:#fff;background-color:#387df2;border-color:#387df2}
+	.btn-neon-blue:not(:disabled):not(.disabled).active,.btn-neon-blue:not(:disabled):not(.disabled):active,.show>.btn-neon-blue.dropdown-toggle{color:#fff;background-color:#387df2;border-color:#387df2}
+	.btn-neon-blue:not(:disabled):not(.disabled).active:focus,.btn-neon-blue:not(:disabled):not(.disabled):active:focus,.show>.btn-neon-blue.dropdown-toggle:focus{box-shadow:0 0 0 .2rem #387df2}
+	
+	.btn-neon-purple{color:#9560F7;outline:2px solid #9560F7;font-weight:bold;margin:3px 3px 10px 3px;}
+	.btn-neon-purple:hover{background:#9560F7;color:#fff;box-shadow: 0 0 5px #9560F7, 0 0 25px #9560F7, 0 0 50px #9560F7, 0 0 100px #9560F7;transform:scale(1.2);}
+	/* .btn-neon-purple.focus,.btn-neon-purple:focus{color:#fff;background-color:#9560F7;border-color:#9560F7;box-shadow:0 0 0 .2rem #9560F7} */
+	.btn-neon-purple.disabled,.btn-neon-purple:disabled{color:#fff;background-color:#9560F7;border-color:#9560F7}
+	.btn-neon-purple:not(:disabled):not(.disabled).active,.btn-neon-purple:not(:disabled):not(.disabled):active,.show>.btn-neon-purple.dropdown-toggle{color:#fff;background-color:#9560F7;border-color:#9560F7}
+	.btn-neon-purple:not(:disabled):not(.disabled).active:focus,.btn-neon-purple:not(:disabled):not(.disabled):active:focus,.show>.btn-neon-purple.dropdown-toggle:focus{box-shadow:0 0 0 .2rem #9560F7}
+	.btn-neon-red{color:#ff0053;outline:2px solid #ff0053;font-weight:bold;margin:3px 3px 10px 3px;}
+	.btn-neon-red:hover{background:#ff0053;color:#fff;box-shadow: 0 0 5px #ff0053, 0 0 25px #ff0053, 0 0 50px #ff0053, 0 0 100px #ff0053;}
+	/* .btn-neon-red.focus,.btn-neon-red:focus{color:#fff;background-color:#ff0053;border-color:#ff0053;box-shadow:0 0 0 .2rem #ff0053} */
+	.btn-neon-red.disabled,.btn-neon-red:disabled{color:#fff;background-color:#ff0053;border-color:#ff0053}
+	.btn-neon-red:not(:disabled):not(.disabled).active,.btn-neon-red:not(:disabled):not(.disabled):active,.show>.btn-neon-red.dropdown-toggle{color:#fff;background-color:#ff0053;border-color:#ff0053}
+	.btn-neon-red:not(:disabled):not(.disabled).active:focus,.btn-neon-red:not(:disabled):not(.disabled):active:focus,.show>.btn-neon-red.dropdown-toggle:focus{box-shadow:0 0 0 .2rem #ff0053}
 </style>
 <script>
 	$(function(){
@@ -78,7 +101,69 @@
 				});
 			}
 		});
-	});
+		
+		
+		 $( "#dialog" ).dialog({
+		      autoOpen: false,
+		      show: {
+		        effect: "blind",
+		        duration: 100
+		      },
+		      hide: {
+		        effect: "explode",
+		        duration: 100
+		      }
+		    });
+		 
+		    $(document).on("click",".amod", function() {
+		    	idx=$(this).attr("idx");
+		    	$.ajax({
+		    		type:"get",
+		    		url:"jsonupdateform.jsp",
+		    		dataType:"json",
+		    		data:{"idx":idx},
+		    		success:function(res){	
+		    			$("#unickname").val(res.nickname);
+		    			$("#ucontent").val(res.content);
+		    		},
+		    		statusCode: {
+		    			404:function(){
+		    				alert("json 파일을 찾을수 없어요!");
+		    			},
+		    			500:function(){
+		    				alert("서버 오류..코드를 다시 한번 보세요!");
+		    			}
+		    		}										
+		    	})
+		      $( "#dialog" ).dialog( "open" );
+		    });
+		    
+		    //댓글수정
+		    $(document).on("click","#btnaupdate",function(){
+		    	var nickname=$("#unickname").val();
+		    	var content=$("#ucontent").val();
+		    	$.ajax({
+		    		type:"get",
+		    		url:"updateanswer.jsp",
+		    		dataType:"html",
+		    		data:{"idx":idx,"nickname":nickname,"content":content},
+		    		success:function(res){
+		    			 $( "#dialog" ).dialog( "close" );
+		    			list();
+		    											
+		    		},
+		    		statusCode: {
+		    			404:function(){
+		    				alert("json 파일을 찾을수 없어요!");
+		    			},
+		    			500:function(){
+		    				alert("서버 오류..코드를 다시 한번 보세요!");
+		    			}
+		    		}										
+		    	})
+		    	
+		    });
+	});//$(function) close
 	
 	function list(){
 		//댓글 출력
@@ -94,7 +179,8 @@
 				$.each(res,function(idx,item){
 					s+="<div>"+item.nickname+"&nbsp;:&nbsp;"+item.content;
 					s+="<span class='aday'>"+item.writeday+"</span>";
-					s+="<button type='button' idx="+item.idx+" class='adel'>삭제</button>";
+					s+="<button type='button' idx="+item.idx+" class='btn btn-neon-blue adel'>삭제</button>";
+					s+="<button type='button' idx="+item.idx+" class='btn btn-neon-purple amod'>수정</button>";
 					s+="</div>";
 				});
 				$("div.alist").html(s);
@@ -115,6 +201,16 @@
 
 </head>
 <body>
+<div id="dialog" title="댓글 수정">
+	<b>닉네임:</b>
+	<input type="text" id="unickname" style="width:100px;">
+	<br>
+	<b>댓글내용:</b>
+	<input type="text" id="ucontent" style="width:150px;">
+	<button type="button" id="btnaupdate" class="btn btn-neon-red">댓글 수정</button>
+</div>
+
+
 <%
 	request.setCharacterEncoding("utf-8");
 	String num=request.getParameter("num");
@@ -162,7 +258,7 @@
 			<tr>
 				<td>
 					<b class="acount">댓글 <span>0</span></b>
-					<div class="alist">
+					<div class="alist" id="alist">
 						댓글목록
 					</div>
 					<div class="aform input-group">

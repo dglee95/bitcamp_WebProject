@@ -59,7 +59,7 @@ public class MyShopDao {
 		Connection conn=null;
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
-		String sql="select * from myshop order by price asc";
+		String sql="select * from myshop order by color asc";
 		
 		//db연결
 		conn=db.getMysqlConnection();

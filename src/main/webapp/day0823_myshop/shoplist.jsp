@@ -36,7 +36,7 @@
 	<button type="button" class="btn btn-info btn-sm"
 	onclick="location.href='shopform.jsp'">상품추가</button>
 	<br><br>
-	<table class="table table-bordered' style="width:800px;">
+	<table class="table table-bordered" style="width:800px;">
 		<tr class="table-info">
 			<th width="50">번호</th>
 			<th width="300">상품명</th>

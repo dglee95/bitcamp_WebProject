@@ -78,6 +78,10 @@
 		top:30%;
 		transform:translate(-60%,-50%);
 	}
+	#kakao-login-btn:hover{
+		cursor:pointer;
+		transform:scale(1.2);
+	}
 </style>
 </head>
 <%
@@ -96,6 +100,7 @@
 %>
 <body>
 <script>
+window.Kakao.init('161d79e1c463f185663c372123ec7671');
 	$(function(){
 		$("#spid").click(function(){
 			$("#myid").focus();
@@ -107,6 +112,16 @@
 
 		
 	});
+	function kakaoLogout() {
+		if (!Kakao.Auth.getAccessToken()) {
+		    console.log('Not logged in.');
+		    return;
+	    }
+	    Kakao.Auth.logout(function(response) {
+			alert(response +' logout');
+		    window.location.href='subwaymain.jsp'
+	    });
+	};
 
 </script>
 	<div style="margin: 100px 100px;" id="login">
@@ -130,9 +145,50 @@
 						<button type="submit" class="btn btn-neon-purple btn-sm" id="loginbtn">로그인</button>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<a id="kakao-login-btn" href="javascript:kakaoLogin();"><img alt="kakao" src="../testimage/kakao_login_medium_narrow.png" width="83%"></a>
+					</td>
+				</tr>
 			</table>
 		</form>
 	</div>
+	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script type='text/javascript'>
+Kakao.init('161d79e1c463f185663c372123ec7671');
+
+
+$("#kakao-login-btn").on("click", function(){
+    //1. 로그인 시도
+    Kakao.Auth.login({
+        success: function(authObj) {
+         
+          //2. 로그인 성공시, API 호출
+          Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              console.log(res);
+              var id = res.id;
+			  scope : 'account_email';
+			alert('로그인성공');
+              location.href="subwaymain.jsp";
+		
+
+              
+        }
+          })
+          console.log(authObj);
+          var token = authObj.access_token;
+        },
+        fail: function(err) {
+          alert(JSON.stringify(err));
+        }
+      });
+        
+}) //
+
+
+</script>
 
 </body>
 </html>

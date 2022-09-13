@@ -57,7 +57,7 @@
 	<h2>각종 fmt 태그들</h2>
 	<c:set var="money" value="5678900"/>
 	<c:set var="today" value="<%=new Date()%>"/><!-- 자바변수를 jstl 변수로 변환시 -->
-	<c:set var="num" value="0.012345678"></c:set>
+	<c:set var="num" value="0.012345678"/>
 	
 	<h3>급여 : ${money }</h3>
 	<h4>오늘날짜 : ${today }</h4>	

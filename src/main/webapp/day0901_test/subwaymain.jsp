@@ -293,7 +293,8 @@
 	<div id="logout">
 		<%=power.equals("admin")?"<button type='button' class='btn-neon-red' id='managebtn'>관리</button>":""%>
 		<b style="margin-bottom: 20px;"><%=power.equals("admin")?"[관리자]":"["+myid+"]님 로그인 중"%></b>
-		<button type="button" class="btn-neon-red" id="logoutbtn" onclick="location.href='logoutaction.jsp'">로그아웃</button>
+<!-- 		<button type="button" class="btn-neon-red" id="logoutbtn" onclick="location.href='logoutaction.jsp'">로그아웃</button> -->
+	 <a href="http://developers.kakao.com/logout">카카오 로그아웃</a>
 		<button type="button" class="btn-neon-red" id="modbtn" onclick="location.href='modify.jsp'">정보수정</button>
 	</div>
 	
